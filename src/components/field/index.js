@@ -359,7 +359,6 @@ export default class TextField extends PureComponent {
       ...props
     } = this.props;
 
-    console.log('mask geldi', mask, props);
     if (mask)
       props.mask = mask;
 
@@ -529,7 +528,7 @@ export default class TextField extends PureComponent {
 
                 editable={!disabled && editable}
                 onChange={this.onChange}
-                onChangeText={this.onChangeText}
+                onChangeText={(_, value) => this.onChangeText(value)}
                 onContentSizeChange={this.onContentSizeChange}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}

@@ -18,6 +18,8 @@ import Affix from '../affix';
 import Helper from '../helper';
 import Counter from '../counter';
 
+import TextInputMask from 'react-native-text-input-mask';
+
 import styles from './styles.js';
 
 export default class TextField extends PureComponent {
@@ -61,6 +63,8 @@ export default class TextField extends PureComponent {
     labelHeight: PropTypes.number,
     labelPadding: PropTypes.number,
     inputContainerPadding: PropTypes.number,
+
+    mask: PropTypes.string,
 
     labelTextStyle: Text.propTypes.style,
     titleTextStyle: Text.propTypes.style,
@@ -340,6 +344,7 @@ export default class TextField extends PureComponent {
       labelHeight,
       labelPadding,
       inputContainerPadding,
+      mask,
       labelTextStyle,
       titleTextStyle,
       tintColor,
@@ -353,6 +358,10 @@ export default class TextField extends PureComponent {
       clearTextOnFocus,
       ...props
     } = this.props;
+
+    console.log('mask geldi', mask, props);
+    if (mask)
+      props.mask = mask;
 
     if (props.multiline && props.height) {
       /* Disable autogrow if height is passed as prop */
@@ -510,7 +519,25 @@ export default class TextField extends PureComponent {
           <View style={styles.row}>
             {this.renderAffix('prefix', active, focused)}
 
-            <TextInput
+            {
+              props.mask ?
+              (<TextInputMask
+                style={[styles.input, inputStyle, inputStyleOverrides]}
+                selectionColor={tintColor}
+
+                {...props}
+
+                editable={!disabled && editable}
+                onChange={this.onChange}
+                onChangeText={this.onChangeText}
+                onContentSizeChange={this.onContentSizeChange}
+                onFocus={this.onFocus}
+                onBlur={this.onBlur}
+                value={value}
+                ref={this.updateRef}
+              />)
+              :
+              (<TextInput
               style={[styles.input, inputStyle, inputStyleOverrides]}
               selectionColor={tintColor}
 
@@ -524,7 +551,8 @@ export default class TextField extends PureComponent {
               onBlur={this.onBlur}
               value={value}
               ref={this.updateRef}
-            />
+              />)
+            }
 
             {this.renderAffix('suffix', active, focused)}
             {this.renderAccessory()}
